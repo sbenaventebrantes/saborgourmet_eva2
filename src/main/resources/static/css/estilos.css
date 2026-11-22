@@ -1,0 +1,394 @@
+/*
+  Hoja de estilos propia del Restaurante Sabor Gourmet.
+
+  La interfaz sigue el estilo NEOMORFICO (neumorphism): los elementos no se
+  separan del fondo con bordes ni con colores distintos, sino que parecen
+  moldeados sobre una misma superficie. El efecto se logra con dos sombras por
+  elemento: una clara arriba a la izquierda, que simula la luz, y una oscura
+  abajo a la derecha, que simula la sombra proyectada.
+
+  La regla basica del estilo es que el fondo de la pagina y el de los elementos
+  comparten el mismo color. Lo que distingue a un elemento es el relieve:
+  - Relieve hacia afuera (sobresale): tarjetas, botones y la barra superior.
+  - Relieve hacia adentro (hundido): los campos de formulario, que invitan a
+    escribir dentro de ellos, y los botones mientras se presionan.
+
+  Bootstrap se mantiene para la grilla responsiva y los componentes; este
+  archivo redefine su apariencia, no su comportamiento.
+*/
+
+/* ------------------------------------------------------------------
+   Variables: toda la paleta y los relieves se definen una sola vez
+   ------------------------------------------------------------------ */
+:root {
+    /* Superficie unica: el fondo de la pagina y el de los elementos */
+    --superficie: #ebe7e1;
+
+    /* Las dos sombras que generan el relieve */
+    --sombra-oscura: #c7c3bc;
+    --sombra-clara: #ffffff;
+
+    /* Texto */
+    --texto: #3b3a36;
+    --texto-suave: #7a776f;
+
+    /* Verde del restaurante, reservado para acentos y llamados a la accion */
+    --acento: #2f5d4a;
+    --acento-oscuro: #244a3b;
+
+    --radio: 16px;
+
+    /* Relieve hacia afuera, en dos intensidades */
+    --relieve: 7px 7px 14px var(--sombra-oscura), -7px -7px 14px var(--sombra-clara);
+    --relieve-sutil: 4px 4px 9px var(--sombra-oscura), -4px -4px 9px var(--sombra-clara);
+    --relieve-alto: 10px 10px 20px var(--sombra-oscura), -10px -10px 20px var(--sombra-clara);
+
+    /* Relieve hacia adentro, para campos y estados presionados */
+    --hundido: inset 5px 5px 10px var(--sombra-oscura), inset -5px -5px 10px var(--sombra-clara);
+    --hundido-sutil: inset 3px 3px 6px var(--sombra-oscura), inset -3px -3px 6px var(--sombra-clara);
+}
+
+body {
+    background-color: var(--superficie);
+    color: var(--texto);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+/* El texto se mantiene oscuro sobre la superficie clara. El neomorfismo pierde
+   legibilidad cuando tambien se aclara el texto, asi que aqui no se hace. */
+h1, h2, h3, h4 {
+    color: var(--texto);
+}
+
+.text-muted {
+    color: var(--texto-suave) !important;
+}
+
+/* ------------------------------------------------------------------
+   Barra de navegacion: una pieza elevada sobre la superficie
+   ------------------------------------------------------------------ */
+.barra-superior {
+    background-color: var(--superficie);
+    box-shadow: var(--relieve-sutil);
+    border-radius: 0 0 var(--radio) var(--radio);
+    margin-bottom: 1.5rem;
+}
+
+.barra-superior .navbar-brand {
+    color: var(--acento);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.barra-superior .nav-link {
+    color: var(--texto);
+    border-radius: 10px;
+    padding: 0.4rem 0.9rem;
+}
+
+/* Al pasar el cursor, el enlace se hunde levemente en la superficie */
+.barra-superior .nav-link:hover,
+.barra-superior .nav-link:focus {
+    color: var(--acento);
+    box-shadow: var(--hundido-sutil);
+}
+
+.navbar-toggler {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--relieve-sutil);
+}
+
+.navbar-toggler:focus {
+    box-shadow: var(--hundido-sutil);
+}
+
+/* ------------------------------------------------------------------
+   Portada: panel elevado en lugar del banner oscuro tradicional
+   ------------------------------------------------------------------ */
+.portada {
+    background-color: var(--superficie);
+    color: var(--texto);
+    border-radius: var(--radio);
+    box-shadow: var(--relieve-alto);
+    margin: 0 1rem 2rem 1rem;
+}
+
+.portada .lead {
+    color: var(--texto-suave);
+}
+
+/* ------------------------------------------------------------------
+   Tarjetas
+   ------------------------------------------------------------------ */
+.card {
+    background-color: var(--superficie);
+    border: none;
+    border-radius: var(--radio);
+    box-shadow: var(--relieve);
+}
+
+.tarjeta-principal {
+    box-shadow: var(--relieve-alto);
+}
+
+/* Las tarjetas de mesa sobresalen mas al pasar el cursor: el relieve indica
+   que el elemento es seleccionable. */
+.tarjeta-mesa {
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.tarjeta-mesa:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--relieve-alto);
+}
+
+/* Indicadores del panel de administracion */
+.tarjeta-indicador .h2 {
+    color: var(--acento);
+    font-weight: 700;
+}
+
+/* ------------------------------------------------------------------
+   Botones
+   ------------------------------------------------------------------
+   Se redefinen las variables de Bootstrap en lugar de sus propiedades, para
+   que los estados (normal, cursor encima, presionado) sigan funcionando.
+*/
+.btn {
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--relieve-sutil);
+    font-weight: 600;
+    transition: box-shadow 0.15s ease;
+}
+
+/* Al presionar, el boton se hunde: es la respuesta tactil del estilo */
+.btn:active,
+.btn:focus-visible {
+    box-shadow: var(--hundido-sutil);
+}
+
+/* Boton principal: el verde del restaurante mantiene el contraste del texto y
+   deja claro cual es la accion recomendada en cada pantalla. */
+.btn-principal {
+    --bs-btn-color: #ffffff;
+    --bs-btn-bg: var(--acento);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-bg: var(--acento-oscuro);
+    --bs-btn-active-color: #ffffff;
+    --bs-btn-active-bg: var(--acento-oscuro);
+}
+
+/* Botones secundarios: misma superficie que el fondo, solo relieve */
+.btn-outline-secondary,
+.btn-outline-primary,
+.btn-outline-danger {
+    --bs-btn-bg: var(--superficie);
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-bg: var(--superficie);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-bg: var(--superficie);
+    --bs-btn-active-border-color: transparent;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--texto);
+    --bs-btn-hover-color: var(--acento);
+    --bs-btn-active-color: var(--acento);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--acento);
+    --bs-btn-hover-color: var(--acento-oscuro);
+    --bs-btn-active-color: var(--acento-oscuro);
+}
+
+/* El rojo se conserva solo en las acciones destructivas, para que se distingan */
+.btn-outline-danger {
+    --bs-btn-color: #9b3b33;
+    --bs-btn-hover-color: #7d2e27;
+    --bs-btn-active-color: #7d2e27;
+}
+
+/* ------------------------------------------------------------------
+   Formularios: hundidos en la superficie
+   ------------------------------------------------------------------ */
+.form-control,
+.form-select,
+textarea.form-control {
+    background-color: var(--superficie);
+    border: none;
+    border-radius: 12px;
+    box-shadow: var(--hundido);
+    color: var(--texto);
+    padding: 0.6rem 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--superficie);
+    color: var(--texto);
+    /* Se conserva el relieve hundido y se agrega un halo verde, para que el
+       campo activo sea evidente tambien para quien navega con el teclado. */
+    box-shadow: var(--hundido), 0 0 0 3px rgba(47, 93, 74, 0.25);
+}
+
+.form-control::placeholder {
+    color: var(--texto-suave);
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--texto);
+    margin-bottom: 0.4rem;
+}
+
+.form-text {
+    color: var(--texto-suave);
+}
+
+.form-check-input {
+    background-color: var(--superficie);
+    border: none;
+    box-shadow: var(--hundido-sutil);
+}
+
+.form-check-input:checked {
+    background-color: var(--acento);
+    box-shadow: var(--relieve-sutil);
+}
+
+/* ------------------------------------------------------------------
+   Avisos: misma superficie, con una franja de color que indica el tipo
+   ------------------------------------------------------------------ */
+.alert {
+    background-color: var(--superficie);
+    border: none;
+    border-radius: var(--radio);
+    box-shadow: var(--relieve-sutil);
+    color: var(--texto);
+}
+
+.alert-success {
+    border-left: 5px solid var(--acento);
+}
+
+.alert-danger {
+    border-left: 5px solid #9b3b33;
+    color: #7d2e27;
+}
+
+.alert-warning {
+    border-left: 5px solid #b5872f;
+}
+
+.alert-info {
+    border-left: 5px solid #456f85;
+}
+
+/* ------------------------------------------------------------------
+   Distintivos de estado
+   ------------------------------------------------------------------ */
+.badge {
+    border-radius: 10px;
+    box-shadow: var(--relieve-sutil);
+    font-weight: 600;
+    padding: 0.4em 0.7em;
+}
+
+.badge.text-bg-success {
+    background-color: #dbe6e0 !important;
+    color: var(--acento) !important;
+}
+
+.badge.text-bg-secondary {
+    background-color: var(--superficie) !important;
+    color: var(--texto-suave) !important;
+}
+
+/* ------------------------------------------------------------------
+   Tablas: se apoyan sobre un panel elevado
+   ------------------------------------------------------------------ */
+.table-responsive {
+    background-color: var(--superficie);
+    border-radius: var(--radio);
+    box-shadow: var(--relieve);
+    padding: 0.75rem 1rem;
+}
+
+.table {
+    color: var(--texto);
+    margin-bottom: 0;
+}
+
+.table > :not(caption) > * > * {
+    background-color: transparent;
+    border-bottom-color: rgba(123, 119, 111, 0.18);
+    padding: 0.7rem 0.6rem;
+}
+
+.table thead th {
+    color: var(--texto-suave);
+    text-transform: uppercase;
+    font-size: 0.76rem;
+    letter-spacing: 0.05em;
+    border-bottom: none;
+}
+
+/* El rayado de Bootstrap se sustituye por un tono mas suave, acorde al estilo */
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(255, 255, 255, 0.45);
+}
+
+/* El codigo de reserva se muestra como una pequena pieza hundida */
+code {
+    background-color: var(--superficie);
+    box-shadow: var(--hundido-sutil);
+    border-radius: 8px;
+    padding: 0.15rem 0.45rem;
+    color: var(--acento);
+}
+
+/* ------------------------------------------------------------------
+   Pie de pagina
+   ------------------------------------------------------------------ */
+.pie-pagina {
+    background-color: var(--superficie);
+    color: var(--texto-suave);
+    border-radius: var(--radio) var(--radio) 0 0;
+    box-shadow: var(--relieve-sutil);
+    margin: 0 1rem;
+}
+
+/* ------------------------------------------------------------------
+   Pantallas pequenas (telefonos, hasta 575.98 px de ancho)
+   ------------------------------------------------------------------
+   Ademas de reducir la tipografia, se suavizan los relieves: las sombras
+   pensadas para un monitor resultan demasiado marcadas en una pantalla chica.
+*/
+@media (max-width: 575.98px) {
+    :root {
+        --relieve: 5px 5px 10px var(--sombra-oscura), -5px -5px 10px var(--sombra-clara);
+        --relieve-alto: 6px 6px 12px var(--sombra-oscura), -6px -6px 12px var(--sombra-clara);
+        --hundido: inset 4px 4px 8px var(--sombra-oscura), inset -4px -4px 8px var(--sombra-clara);
+    }
+
+    .portada {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        margin: 0 0.5rem 1.5rem 0.5rem;
+    }
+
+    .portada .display-5 {
+        font-size: 1.75rem;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .table-responsive {
+        padding: 0.5rem;
+    }
+}

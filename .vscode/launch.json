@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Sabor Gourmet (dev)",
+            "request": "launch",
+            "mainClass": "cl.ipss.saborgourmet.SaborGourmetApplication",
+            "projectName": "sabor-gourmet",
+            "args": "--spring.profiles.active=dev"
+        }
+    ]
+}

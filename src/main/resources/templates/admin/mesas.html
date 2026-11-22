@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Configuracion de las mesas del local: listado, alta, edicion y estado. -->
+<head th:replace="~{fragments/layout :: cabeza('Configurar mesas')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h1 class="h3 mb-0">Configuracion de mesas</h1>
+        <a th:href="@{/admin/mesas/nueva}" class="btn btn-principal">Agregar mesa</a>
+    </div>
+
+    <div class="table-responsive mt-3">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Numero</th>
+                <th scope="col">Capacidad</th>
+                <th scope="col">Ubicacion</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${mesas}">
+                <td th:text="${m.numero}">1</td>
+                <td th:text="${m.capacidad} + ' personas'">4 personas</td>
+                <td th:text="${m.ubicacion.etiqueta}">Terraza</td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${m.activa} ? 'text-bg-success' : 'text-bg-secondary'"
+                          th:text="${m.activa} ? 'Habilitada' : 'Deshabilitada'">Habilitada</span>
+                </td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-primary"
+                           th:href="@{/admin/mesas/{id}/editar(id=${m.id})}">Editar</a>
+
+                        <!-- Cambia entre habilitada y deshabilitada sin borrar la mesa -->
+                        <form th:action="@{/admin/mesas/{id}/estado(id=${m.id})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary"
+                                    th:text="${m.activa} ? 'Deshabilitar' : 'Habilitar'">Deshabilitar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/admin}" class="btn btn-outline-secondary">Volver al panel</a>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

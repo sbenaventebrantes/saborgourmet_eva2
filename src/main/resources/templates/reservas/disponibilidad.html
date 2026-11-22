@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!--
+  Resultado de la busqueda: mesas libres para la fecha, el turno y la cantidad
+  de personas solicitados.
+-->
+<head th:replace="~{fragments/layout :: cabeza('Mesas disponibles')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+
+<main class="container my-4">
+
+    <h1 class="h3">Mesas disponibles</h1>
+    <p class="text-muted">
+        <span th:text="${#temporals.format(fecha, 'dd-MM-yyyy')}">23-11-2026</span>
+        a las <span th:text="${#temporals.format(hora, 'HH:mm')}">20:00</span>
+        para <span th:text="${personas}">4</span> personas.
+    </p>
+
+    <!--
+      th:if muestra este bloque solo cuando la lista viene vacia.
+      #lists.isEmpty es una utilidad de Thymeleaf para comprobarlo.
+    -->
+    <div th:if="${#lists.isEmpty(mesas)}" class="alert alert-warning">
+        No quedan mesas libres con esas condiciones. Pruebe con otro horario o
+        con una fecha distinta.
+        <a th:href="@{/}" class="alert-link">Volver al buscador</a>.
+    </div>
+
+    <!-- Tarjetas de mesas: una columna en telefono, dos en tablet, tres en escritorio -->
+    <div class="row g-3" th:unless="${#lists.isEmpty(mesas)}">
+        <div class="col-12 col-sm-6 col-lg-4" th:each="mesa : ${mesas}">
+            <div class="card h-100 tarjeta-mesa">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="h5 card-title" th:text="'Mesa ' + ${mesa.numero}">Mesa 1</h2>
+                    <p class="card-text mb-1">
+                        <span class="badge text-bg-secondary"
+                              th:text="${mesa.ubicacion.etiqueta}">Terraza</span>
+                    </p>
+                    <p class="card-text text-muted">
+                        Capacidad: <span th:text="${mesa.capacidad}">4</span> personas
+                    </p>
+
+                    <!--
+                      El enlace lleva al formulario arrastrando los datos de la
+                      busqueda. @{...(param=valor)} construye la URL con sus
+                      parametros de forma segura, codificando los valores.
+                    -->
+                    <a class="btn btn-principal mt-auto"
+                       th:href="@{/reservas/nueva(mesaId=${mesa.id}, fecha=${fecha}, hora=${hora}, personas=${personas})}">
+                        Reservar esta mesa
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/}" class="btn btn-outline-secondary mt-4">Nueva busqueda</a>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

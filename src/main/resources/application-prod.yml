@@ -1,0 +1,15 @@
+# Ambiente de PRODUCCION.
+# Los datos sensibles (direccion de la base, usuario y clave) se leen de
+# variables de entorno del servidor y nunca se escriben en el repositorio.
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      # validate: solo comprueba que las tablas existan, no las modifica.
+      ddl-auto: validate
+    show-sql: false
+  thymeleaf:
+    cache: true

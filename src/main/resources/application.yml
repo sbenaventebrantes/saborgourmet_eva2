@@ -1,0 +1,37 @@
+# Configuracion comun a todos los ambientes.
+# El perfil activo decide que archivo application-<perfil>.yml se suma a este.
+spring:
+  application:
+    name: sabor-gourmet
+  profiles:
+    default: dev
+
+  thymeleaf:
+    # Codificacion de las plantillas. Permite usar tildes y la letra n con virgulilla.
+    encoding: UTF-8
+    # En produccion conviene dejar la cache activa; el perfil dev la desactiva
+    # para que los cambios en el HTML se vean sin reiniciar la aplicacion.
+    cache: true
+
+  jpa:
+    # Cierra la sesion de JPA al terminar el controlador, antes de renderizar la
+    # vista. Obliga a cargar en el servicio todo lo que la vista necesitara.
+    open-in-view: false
+
+  mvc:
+    format:
+      date: iso
+      time: HH:mm
+
+server:
+  error:
+    include-stacktrace: never
+
+# Parametros propios del restaurante. Al estar aqui y no escritos en el codigo,
+# el local puede cambiar sus turnos de atencion sin recompilar la aplicacion.
+restaurante:
+  nombre: Sabor Gourmet
+  # Turnos de atencion, en formato HH:mm separados por coma.
+  horarios: "13:00,14:00,15:00,20:00,21:00,22:00"
+  # Cuantos dias hacia adelante se aceptan reservas.
+  dias-anticipacion: 60

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!--
+  Pagina de inicio con el buscador de disponibilidad.
+  th:replace reemplaza esta etiqueta por el fragmento "cabeza" de layout.html,
+  al que se le pasa el titulo de esta pantalla.
+-->
+<head th:replace="~{fragments/layout :: cabeza('Reservas en linea')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+
+<!-- Portada -->
+<header class="portada text-center py-5">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Reserve su mesa en linea</h1>
+        <p class="lead mb-0">Elija el dia, el horario y la cantidad de personas.
+            Le mostramos al instante las mesas disponibles.</p>
+    </div>
+</header>
+
+<main class="container my-4">
+
+    <div class="row justify-content-center">
+        <!--
+          Clases de la grilla de Bootstrap:
+          col-12 ocupa todo el ancho en telefonos y col-lg-8 reduce la tarjeta a
+          dos tercios en pantallas grandes. Este par de clases es lo que hace que
+          el formulario se vea bien en cualquier dispositivo.
+        -->
+        <div class="col-12 col-lg-8">
+            <div class="card tarjeta-principal">
+                <div class="card-body p-4">
+                    <h2 class="h4 mb-3">Buscar disponibilidad</h2>
+
+                    <!--
+                      El formulario envia por GET a /reservas/disponibilidad.
+                      Se usa GET y no POST porque es una consulta: el resultado se
+                      puede compartir o guardar como enlace sin efectos secundarios.
+                    -->
+                    <form th:action="@{/reservas/disponibilidad}" method="get" class="row g-3">
+
+                        <div class="col-12 col-md-4">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <!--
+                              th:value y th:min reciben valores calculados en el
+                              controlador: hoy como minimo y la fecha maxima que
+                              acepta el restaurante.
+                            -->
+                            <input type="date" id="fecha" name="fecha" class="form-control" required
+                                   th:value="${hoy}" th:min="${hoy}" th:max="${fechaMaxima}">
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label for="hora" class="form-label">Horario</label>
+                            <select id="hora" name="hora" class="form-select" required>
+                                <!--
+                                  th:each recorre la lista de turnos que entrego el
+                                  controlador y genera una opcion por cada uno.
+                                -->
+                                <option th:each="h : ${horarios}"
+                                        th:value="${h}"
+                                        th:text="${h}">20:00</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label for="personas" class="form-label">Personas</label>
+                            <input type="number" id="personas" name="personas" class="form-control"
+                                   min="1" max="20" value="2" required>
+                        </div>
+
+                        <div class="col-12 d-grid d-md-block">
+                            <button type="submit" class="btn btn-principal btn-lg">Ver mesas disponibles</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tres columnas informativas que se apilan una sobre otra en el telefono -->
+    <div class="row mt-5 g-4">
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center p-3">
+                <h3 class="h6 text-uppercase text-muted">Paso 1</h3>
+                <p class="mb-0">Elija fecha, horario y cantidad de comensales.</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center p-3">
+                <h3 class="h6 text-uppercase text-muted">Paso 2</h3>
+                <p class="mb-0">Seleccione una de las mesas libres y deje sus datos.</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card h-100 text-center p-3">
+                <h3 class="h6 text-uppercase text-muted">Paso 3</h3>
+                <p class="mb-0">Reciba su codigo para modificar o cancelar cuando quiera.</p>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Ambiente de PRUEBAS: base H2 independiente de la de desarrollo.
+# Se recrea en cada ejecucion de los tests para que siempre partan de cero.
+spring:
+  datasource:
+    url: jdbc:h2:mem:saborgourmet_test
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false

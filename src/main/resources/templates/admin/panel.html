@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!--
+  Panel del personal del restaurante: resumen del dia y listado de reservas,
+  con la opcion de cancelar cuando el cliente avisa por telefono.
+-->
+<head th:replace="~{fragments/layout :: cabeza('Administracion')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <h1 class="h3 mb-0">Reservas del dia</h1>
+        <a th:href="@{/admin/mesas}" class="btn btn-outline-secondary">Configurar mesas</a>
+    </div>
+
+    <!-- Selector de fecha: recarga el panel con el dia elegido -->
+    <form th:action="@{/admin}" method="get" class="row g-2 align-items-end my-3">
+        <div class="col-12 col-sm-5 col-md-3">
+            <label for="fecha" class="form-label">Ver el dia</label>
+            <input type="date" id="fecha" name="fecha" class="form-control" th:value="${fecha}">
+        </div>
+        <div class="col-12 col-sm-3">
+            <button type="submit" class="btn btn-principal w-100">Mostrar</button>
+        </div>
+    </form>
+
+    <!-- Tarjetas de resumen -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card tarjeta-indicador h-100 p-3">
+                <p class="text-muted small text-uppercase mb-1">Reservas confirmadas</p>
+                <p class="h2 mb-0" th:text="${totalConfirmadas}">0</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card tarjeta-indicador h-100 p-3">
+                <p class="text-muted small text-uppercase mb-1">Comensales esperados</p>
+                <p class="h2 mb-0" th:text="${totalComensales}">0</p>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card tarjeta-indicador h-100 p-3">
+                <p class="text-muted small text-uppercase mb-1">Mesas habilitadas</p>
+                <p class="h2 mb-0" th:text="${mesasActivas}">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(reservas)}" class="alert alert-info">
+        No hay reservas registradas para esta fecha.
+    </div>
+
+    <!--
+      table-responsive agrega desplazamiento horizontal cuando la tabla no cabe,
+      de modo que en el telefono la informacion no se corta ni se deforma.
+    -->
+    <div class="table-responsive" th:unless="${#lists.isEmpty(reservas)}">
+        <table class="table table-striped align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Hora</th>
+                <th scope="col">Mesa</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Contacto</th>
+                <th scope="col">Personas</th>
+                <th scope="col">Codigo</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Accion</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Una fila por reserva -->
+            <tr th:each="r : ${reservas}">
+                <td th:text="${#temporals.format(r.hora, 'HH:mm')}">20:00</td>
+                <td th:text="${r.mesa.numero}">3</td>
+                <td>
+                    <span th:text="${r.cliente.nombre}">Nombre</span>
+                    <br>
+                    <small class="text-muted" th:if="${r.observaciones != null and !r.observaciones.isBlank()}"
+                           th:text="${r.observaciones}">Observaciones</small>
+                </td>
+                <td class="small">
+                    <span th:text="${r.cliente.telefono}">+56 9</span><br>
+                    <span class="text-muted" th:text="${r.cliente.email}">correo</span>
+                </td>
+                <td th:text="${r.cantidadPersonas}">4</td>
+                <td><code th:text="${r.codigo}">SG-000000</code></td>
+                <td>
+                    <span class="badge"
+                          th:classappend="${r.estaActiva()} ? 'text-bg-success' : 'text-bg-secondary'"
+                          th:text="${r.estado.etiqueta}">Confirmada</span>
+                </td>
+                <td>
+                    <!-- El boton de cancelar solo aparece en reservas vigentes -->
+                    <form th:if="${r.estaActiva()}"
+                          th:action="@{/admin/reservas/{codigo}/cancelar(codigo=${r.codigo})}" method="post"
+                          onsubmit="return confirm('Cancelar esta reserva?');">
+                        <input type="hidden" name="fecha" th:value="${fecha}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Cancelar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

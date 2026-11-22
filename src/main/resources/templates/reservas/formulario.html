@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Formulario con los datos de contacto para confirmar la reserva. -->
+<head th:replace="~{fragments/layout :: cabeza('Confirmar reserva')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <h1 class="h3">Confirmar reserva</h1>
+
+            <!-- Resumen de lo elegido en el paso anterior -->
+            <div class="alert alert-light border">
+                <strong th:text="${mesa.descripcion}">Mesa 3 (Salon principal)</strong><br>
+                <span th:text="${#temporals.format(reservaForm.fecha, 'dd-MM-yyyy')}">23-11-2026</span>
+                a las <span th:text="${#temporals.format(reservaForm.hora, 'HH:mm')}">20:00</span>
+                para <span th:text="${reservaForm.personas}">4</span> personas.
+            </div>
+
+            <!--
+              th:object enlaza el formulario completo al objeto reservaForm del
+              modelo. Dentro del formulario, th:field="*{nombre}" genera de una
+              sola vez los atributos id, name y value del campo.
+            -->
+            <form th:action="@{/reservas}" th:object="${reservaForm}" method="post" class="row g-3">
+
+                <!--
+                  Campos ocultos: viajan con el formulario para que el servidor
+                  sepa que mesa y que turno se esta reservando.
+                -->
+                <input type="hidden" th:field="*{mesaId}">
+                <input type="hidden" th:field="*{fecha}">
+                <input type="hidden" th:field="*{hora}">
+                <input type="hidden" th:field="*{personas}">
+
+                <div class="col-12 col-md-6">
+                    <label for="nombre" class="form-label">Nombre y apellido</label>
+                    <input type="text" id="nombre" class="form-control" th:field="*{nombre}">
+                    <!--
+                      th:errors muestra el mensaje de la anotacion de validacion
+                      que no se cumplio, y th:if lo oculta cuando el campo es valido.
+                    -->
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}"
+                         th:errors="*{nombre}"></div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" id="telefono" class="form-control" th:field="*{telefono}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('telefono')}"
+                         th:errors="*{telefono}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label for="email" class="form-label">Correo electronico</label>
+                    <input type="email" id="email" class="form-control" th:field="*{email}">
+                    <div class="form-text">Con este correo y su codigo podra modificar o cancelar la reserva.</div>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('email')}"
+                         th:errors="*{email}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label for="observaciones" class="form-label">Observaciones (opcional)</label>
+                    <textarea id="observaciones" class="form-control" rows="3"
+                              th:field="*{observaciones}"
+                              placeholder="Alergias, silla para nino, celebracion..."></textarea>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('observaciones')}"
+                         th:errors="*{observaciones}"></div>
+                </div>
+
+                <div class="col-12 d-grid d-md-flex gap-2">
+                    <button type="submit" class="btn btn-principal btn-lg">Confirmar reserva</button>
+                    <a th:href="@{/}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

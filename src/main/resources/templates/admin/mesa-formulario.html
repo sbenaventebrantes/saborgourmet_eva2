@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!--
+  Formulario de alta y edicion de una mesa. Se usa la misma plantilla para los
+  dos casos: cuando la mesa ya existe trae su id en un campo oculto.
+-->
+<head th:replace="~{fragments/layout :: cabeza('Mesa')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+
+            <h1 class="h3" th:text="${mesa.id == null} ? 'Agregar mesa' : 'Editar mesa'">Agregar mesa</h1>
+
+            <form th:action="@{/admin/mesas}" th:object="${mesa}" method="post" class="row g-3">
+
+                <!-- Solo viaja cuando se esta editando una mesa existente -->
+                <input type="hidden" th:field="*{id}">
+
+                <div class="col-12 col-md-6">
+                    <label for="numero" class="form-label">Numero de mesa</label>
+                    <input type="number" id="numero" class="form-control" min="1" th:field="*{numero}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('numero')}" th:errors="*{numero}"></div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="capacidad" class="form-label">Capacidad</label>
+                    <input type="number" id="capacidad" class="form-control" min="1" max="20" th:field="*{capacidad}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('capacidad')}" th:errors="*{capacidad}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label for="ubicacion" class="form-label">Ubicacion</label>
+                    <select id="ubicacion" class="form-select" th:field="*{ubicacion}">
+                        <!-- Las opciones salen del enum Ubicacion, no de texto escrito a mano -->
+                        <option th:each="u : ${ubicaciones}" th:value="${u}" th:text="${u.etiqueta}">Salon</option>
+                    </select>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></div>
+                </div>
+
+                <div class="col-12 form-check ms-2">
+                    <input type="checkbox" id="activa" class="form-check-input" th:field="*{activa}">
+                    <label for="activa" class="form-check-label">Mesa habilitada para reservas</label>
+                </div>
+
+                <div class="col-12 d-grid d-md-flex gap-2">
+                    <button type="submit" class="btn btn-principal">Guardar</button>
+                    <a th:href="@{/admin/mesas}" class="btn btn-outline-secondary">Volver</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

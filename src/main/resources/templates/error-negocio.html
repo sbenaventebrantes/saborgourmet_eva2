@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!--
+  Pagina de aviso. La muestra el manejador global de errores cuando se incumple
+  una regla de negocio, por ejemplo si el codigo de reserva no existe.
+-->
+<head th:replace="~{fragments/layout :: cabeza('Aviso')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+
+<main class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 text-center">
+            <div class="card p-4">
+                <h1 class="h4">No pudimos completar la operacion</h1>
+                <p class="mb-4" th:text="${mensajeError}">Detalle del problema.</p>
+                <div class="d-grid d-sm-flex gap-2 justify-content-center">
+                    <a th:href="@{/}" class="btn btn-principal">Ir al inicio</a>
+                    <a th:href="@{/reservas/buscar}" class="btn btn-outline-secondary">Consultar mi reserva</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

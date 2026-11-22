@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Pantalla donde el cliente recupera su reserva con el codigo y el correo. -->
+<head th:replace="~{fragments/layout :: cabeza('Mi reserva')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6">
+            <div class="card tarjeta-principal">
+                <div class="card-body p-4">
+                    <h1 class="h4 mb-3">Consultar mi reserva</h1>
+                    <p class="text-muted small">
+                        Ingrese el codigo que recibio al reservar y el correo con el que lo hizo.
+                        Pedimos los dos datos para que nadie mas pueda ver su reserva.
+                    </p>
+
+                    <form th:action="@{/reservas/buscar}" method="post" class="row g-3">
+                        <div class="col-12">
+                            <label for="codigo" class="form-label">Codigo de reserva</label>
+                            <input type="text" id="codigo" name="codigo" class="form-control"
+                                   placeholder="SG-XXXXXX" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Correo electronico</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="col-12 d-grid">
+                            <button type="submit" class="btn btn-principal">Buscar reserva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>

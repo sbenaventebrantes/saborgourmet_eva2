@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<!-- Formulario de modificacion de una reserva ya existente. -->
+<head th:replace="~{fragments/layout :: cabeza('Modificar reserva')}"></head>
+<body>
+
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+<div th:replace="~{fragments/layout :: avisos}"></div>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <h1 class="h3">Modificar reserva <span th:text="${reserva.codigo}">SG-000000</span></h1>
+            <p class="text-muted">Puede cambiar el dia, el horario, la mesa o la cantidad de personas.</p>
+
+            <!-- El email viaja en la URL para seguir identificando al cliente -->
+            <form th:action="@{/reservas/{codigo}/editar(codigo=${reserva.codigo}, email=${email})}"
+                  th:object="${reservaForm}" method="post" class="row g-3">
+
+                <input type="hidden" th:field="*{email}">
+
+                <div class="col-12 col-md-4">
+                    <label for="fecha" class="form-label">Fecha</label>
+                    <input type="date" id="fecha" class="form-control"
+                           th:field="*{fecha}" th:min="${hoy}" th:max="${fechaMaxima}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label for="hora" class="form-label">Horario</label>
+                    <select id="hora" class="form-select" th:field="*{hora}">
+                        <option th:each="h : ${horarios}" th:value="${h}" th:text="${h}">20:00</option>
+                    </select>
+                    <div class="text-danger small" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <label for="personas" class="form-label">Personas</label>
+                    <input type="number" id="personas" class="form-control" min="1" max="20"
+                           th:field="*{personas}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('personas')}" th:errors="*{personas}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label for="mesaId" class="form-label">Mesa</label>
+                    <select id="mesaId" class="form-select" th:field="*{mesaId}">
+                        <!--
+                          Se listan las mesas libres en ese turno mas la que el
+                          cliente ya tiene asignada, para que aparezca seleccionada.
+                        -->
+                        <option th:each="m : ${mesas}" th:value="${m.id}" th:text="${m.descripcion}">Mesa 1</option>
+                    </select>
+                    <div class="form-text">
+                        Si cambia la fecha o el horario, guarde primero para ver las mesas libres en ese turno.
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="nombre" class="form-label">Nombre y apellido</label>
+                    <input type="text" id="nombre" class="form-control" th:field="*{nombre}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" id="telefono" class="form-control" th:field="*{telefono}">
+                    <div class="text-danger small" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></div>
+                </div>
+
+                <div class="col-12">
+                    <label for="observaciones" class="form-label">Observaciones</label>
+                    <textarea id="observaciones" class="form-control" rows="3" th:field="*{observaciones}"></textarea>
+                </div>
+
+                <div class="col-12 d-grid d-md-flex gap-2">
+                    <button type="submit" class="btn btn-principal">Guardar cambios</button>
+                    <a class="btn btn-outline-secondary"
+                       th:href="@{/reservas/{codigo}(codigo=${reserva.codigo}, email=${email})}">Volver</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pie}"></footer>
+</body>
+</html>
